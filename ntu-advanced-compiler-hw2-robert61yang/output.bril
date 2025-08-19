@@ -1,0 +1,62 @@
+@main(input: int) {
+.B0:
+  zero0: int = const 0;
+  ten0: int = const 10;
+  sum0: int = const 0;
+  digits0: int = call @getDigits input;
+  tmp0: int = id input;
+.loop:
+  tmp1: int = phi tmp0 tmp2 .B0 .body;
+  sum1: int = phi sum0 sum2 .B0 .body;
+  b: bool = gt tmp1 zero0;
+  br b .body .done;
+.body:
+  digit: int = call @mod tmp1 ten0;
+  pow: int = call @power digit digits0;
+  sum2: int = add sum1 pow;
+  tmp2: int = div tmp1 ten0;
+  jmp .loop;
+.done:
+  res: bool = eq input sum1;
+  print res;
+}
+@getDigits(n: int): int {
+.B0:
+  ten: int = const 10;
+  zero: int = const 0;
+  one0: int = const 1;
+  div0: int = div n ten;
+  cond: bool = eq div0 zero;
+  br cond .then .else;
+.then:
+  ret one0;
+.else:
+  rec: int = call @getDigits div0;
+  res: int = add rec one0;
+  ret res;
+}
+@mod(a: int, b: int): int {
+.B0:
+  q: int = div a b;
+  aq: int = mul b q;
+  mod: int = sub a aq;
+  ret mod;
+}
+@power(base: int, exp: int): int {
+.B0:
+  ten: int = const 10;
+  zero0: int = const 0;
+  one0: int = const 1;
+  res0: int = const 1;
+.loop:
+  exp0: int = phi exp exp1 .B0 .body;
+  res1: int = phi res0 res2 .B0 .body;
+  b: bool = eq exp0 zero0;
+  br b .done .body;
+.body:
+  res2: int = mul res1 base;
+  exp1: int = sub exp0 one0;
+  jmp .loop;
+.done:
+  ret res1;
+}
